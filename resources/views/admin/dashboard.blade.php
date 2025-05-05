@@ -2,7 +2,7 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <!-- Statistics Cards -->
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div class="overflow-hidden rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
+            <div class="overflow-hidden rounded-xl border border-neutral-200 bg-zinc-50 p-4 dark:border-neutral-700 dark:bg-zinc-800">
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Total Announcements</p>
                     <h2 class="text-2xl font-bold mb-1">{{ \App\Models\Announcement::count() }}</h2>
@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <div class="overflow-hidden rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
+            <div class="overflow-hidden rounded-xl border border-neutral-200 bg-zinc-50 p-4 dark:border-neutral-700 dark:bg-zinc-800">
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Total Events</p>
                     <h2 class="text-2xl font-bold mb-1">{{ \App\Models\Event::count() }}</h2>
@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="overflow-hidden rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
+            <div class="overflow-hidden rounded-xl border border-neutral-200 bg-zinc-50 p-4 dark:border-neutral-700 dark:bg-zinc-800">
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Gallery Collection</p>
                     <h2 class="text-2xl font-bold mb-1">{{ \App\Models\Gallery::count() }}</h2>
@@ -66,7 +66,7 @@
         <!-- Recent Data Section -->
         <div class="grid gap-4 md:grid-cols-2">
             <!-- Recent Announcements -->
-            <div class="overflow-hidden rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
+            <div class="overflow-hidden rounded-xl border border-neutral-200 bg-zinc-50 p-4 dark:border-neutral-700 dark:bg-zinc-800">
                 <h3 class="text-lg font-semibold mb-3">Recent Announcements</h3>
                 <div class="overflow-y-auto max-h-64">
                     @foreach(\App\Models\Announcement::orderBy('created_at', 'desc')->take(5)->get() as $announcement)
@@ -86,7 +86,7 @@
             </div>
 
             <!-- Recent Events -->
-            <div class="overflow-hidden rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
+            <div class="overflow-hidden rounded-xl border border-neutral-200 bg-zinc-50 p-4 dark:border-neutral-700 dark:bg-zinc-800">
                 <h3 class="text-lg font-semibold mb-3">Recent Events</h3>
                 <div class="overflow-y-auto max-h-64">
                     @foreach(\App\Models\Event::orderBy('event_date', 'desc')->take(5)->get() as $event)
@@ -105,7 +105,7 @@
         </div>
 
         <!-- Academic Achievements Summary -->
-        <div class="overflow-hidden rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
+        <div class="overflow-hidden rounded-xl border border-neutral-200 bg-zinc-50 p-4 dark:border-neutral-700 dark:bg-zinc-800">
             <h3 class="text-lg font-semibold mb-3">Academic Achievements</h3>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -132,7 +132,7 @@
         </div>
 
         <!-- Co-curricular Achievements -->
-        <div class="overflow-hidden rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
+        <div class="overflow-hidden rounded-xl border border-neutral-200 bg-zinc-50 p-4 dark:border-neutral-700 dark:bg-zinc-800">
             <h3 class="text-lg font-semibold mb-3">Co-curricular Achievements</h3>
             <div class="overflow-y-auto max-h-64">
                 @foreach(\App\Models\CocurricularAchievement::with('items')->orderBy('event_date', 'desc')->take(5)->get() as $achievement)
