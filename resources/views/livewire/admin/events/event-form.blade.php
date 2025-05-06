@@ -149,6 +149,7 @@
                         <flux:text variant="strong" class="mb-2 block text-gray-700 dark:text-gray-300">Upload Image
                         </flux:text>
                         <input type="file" id="thumbnail" wire:model="thumbnail"
+                        @csrf
                             class="block w-full text-sm text-gray-500
                                 file:mr-4 file:py-2 file:px-4
                                 file:rounded-full file:border-0
