@@ -15,6 +15,8 @@
         <flux:button
             @if ($contactUs) 
                 href="{{ route('admin.contactus.edit', ['contactUsId' => $contactUs->id]) }}" 
+            @else
+                disabled
             @endif
             class="bg-gray-600 hover:bg-gray-700 transition-colors">
             {{ __('Edit Contact Us') }}
