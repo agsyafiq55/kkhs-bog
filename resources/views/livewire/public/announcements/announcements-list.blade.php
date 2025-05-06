@@ -5,7 +5,7 @@
         <div class="absolute inset-0 z-0">
             <img src="https://images.pexels.com/photos/518543/pexels-photo-518543.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Newspaper"
                 alt="Events background" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-zinc-900/80"></div>
+            <div class="absolute inset-0 bg-zinc-700/50 dark:bg-black/50"></div>
         </div>
         <div class="relative z-10 flex flex-col items-center text-center py-16 px-4">
             <!-- Main heading -->
@@ -52,7 +52,7 @@
                 <a href="{{ route('announcements.show', $announcement->id) }}"
                     class="block hover:no-underline h-full group">
                     <article
-                        class="relative overflow-hidden rounded-lg shadow-md border border-gray-100 dark:border-zinc-800 transition-all duration-300 hover:shadow-xl hover:scale-102 h-96 bg-white dark:bg-zinc-900">
+                        class="relative overflow-hidden rounded-lg shadow-md border border-neutral-200 dark:border-zinc-800 transition-all duration-300 hover:shadow-xl hover:scale-102 h-96 bg-zinc-50 dark:bg-zinc-900">
                         <!-- Background Image -->
                         <div class="h-48 overflow-hidden">
                             <img src="{{ $announcement->image ? asset('storage/' . $announcement->image) : asset('images/placeholder.jpg') }}"

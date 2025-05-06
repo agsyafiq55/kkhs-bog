@@ -3,7 +3,7 @@
         class="relative overflow-hidden rounded-2xl shadow-lg border border-gray-200 dark:border-zinc-800 max-w-6xl mx-auto mb-12">
         <img src="https://mrwallpaper.com/images/hd/chinese-lantern-photography-azuq3mbutdxhp3z7.jpg"
             alt="Chinese lantern" class="absolute inset-0 w-full h-full object-cover z-0">
-        <div class="absolute inset-0 bg-zinc-900/70 z-10"></div>
+        <div class="absolute inset-0   bg-zinc-700/50 dark:bg-black/50 z-10"></div>
 
         <div class="relative z-20 flex flex-col md:flex-row items-center md:items-start p-10 md:p-16">
             <div class="md:w-2/3 mb-6 md:mb-0">
@@ -95,12 +95,12 @@
                         <div class="absolute inset-0 z-0">
                             <img src="https://images.pexels.com/photos/6775105/pexels-photo-6775105.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                                 alt="Chinese landscape" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-white/80 dark:bg-zinc-900/80"></div>
+                            <div class="absolute inset-0 bg-zinc-700/40 dark:bg-black/50"></div>
                         </div>
 
                         <div class="flex flex-col md:flex-row relative z-10">
                             <div class="md:w-1/3 p-8 flex items-center">
-                                <p class="text-sm md:text-base text-justify">
+                                <p class="text-white text-sm md:text-base text-justify">
                                     Our diverse board that comprises of individuals from different background and
                                     industries
                                     is committed towards maintaining and developing the school and adding value to the
@@ -110,8 +110,8 @@
                                 </p>
                             </div>
                             <div class="md:w-2/3 p-8 flex flex-col justify-center items-end text-right">
-                                <h1 class="text-7xl font-bold mb-2">Meet Our Team</h1>
-                                <h2 class="text-5xl font-semibold">关于我们</h2>
+                                <h1 class="text-white text-7xl font-bold mb-2">Meet Our Team</h1>
+                                <h2 class="text-white text-5xl font-semibold">关于我们</h2>
                             </div>
                         </div>
                     </div>
@@ -209,16 +209,16 @@
                         <div class="absolute inset-0 z-0">
                             <img src="https://cdn.pixabay.com/photo/2017/07/02/09/03/books-2463779_1280.jpg"
                                 alt="Books" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-white/80 dark:bg-zinc-900/80"></div>
+                            <div class="absolute inset-0 bg-zinc-700/40 dark:bg-black/50"></div>
                         </div>
 
                         <div class="flex flex-col md:flex-row relative z-10">
                             <div class="md:w-2/3 p-8 flex flex-col justify-center">
-                                <h1 class="text-7xl font-bold mb-2">Our Journey</h1>
-                                <h2 class="text-5xl font-semibold">我们的历程</h2>
+                                <h1 class="text-white text-7xl font-bold mb-2">Our Journey</h1>
+                                <h2 class="text-white text-5xl font-semibold">我们的历程</h2>
                             </div>
                             <div class="md:w-1/3 p-8 flex items-center">
-                                <p class="text-sm md:text-base text-justify">
+                                <p class="text-white text-sm md:text-base text-justify">
                                     Explore the mesmerizing sceneries and various facilities offered in Kota Kinabalu
                                     High
                                     School.

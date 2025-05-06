@@ -22,10 +22,10 @@
                                 </div>
                                 <h4 class="text-lg font-semibold text-white mb-3">{{ $card->title }}</h4>
                                 @if ($card->description)
-                                    <p class="text-gray-300 mb-2">{{ $card->description }}</p>
+                                    <p class="text-gray-700 dark:text-white font-semibold b-2">{{ $card->description }}</p>
                                 @endif
                                 @if ($card->description_zh)
-                                    <p class="text-gray-300 font-chinese">{{ $card->description_zh }}</p>
+                                    <p class="text-gray-700 dark:text-white font-chinese">{{ $card->description_zh }}</p>
                                 @endif
                             </div>
                         </div>

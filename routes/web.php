@@ -15,7 +15,13 @@ Route::get('/linkstorage', function () {
 });
 
 // Landing Page
-Route::get('/', [GuestController::class, 'index'])->name('home');
+// If user is authenticated, redirect to dashboard, otherwise show welcome page
+Route::get('/', function() {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return app(GuestController::class)->index();
+})->name('home');
 
 // 1. Events Page
 // Index: List all events

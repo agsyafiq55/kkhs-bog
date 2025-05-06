@@ -22,16 +22,16 @@ $formattedDate = \Carbon\Carbon::parse($event->event_date)->format('d F Y');
         <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Article Header -->
-            <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700 overflow-hidden mb-8">
-                <div class="flex flex-col md:flex-row">
-                    <!-- Hero Image (Left) -->
-                    <div class="w-full md:w-2/3">
+            <div class="border-neutral-200 bg-zinc-50 dark:bg-zinc-900 rounded-xl shadow-sm dark:border-zinc-700 overflow-hidden mb-8">
+                <div class="flex flex-col">
+                    <!-- Hero Image (Top) -->
+                    <div class="w-full">
                         @if($event->thumbnail)
                             <img src="{{ asset('storage/' . $event->thumbnail) }}" 
-                                class="w-full h-full object-cover"
+                                class="w-full h-[400px] object-cover"
                                 alt="Event Thumbnail" />
                         @else
-                            <div class="w-full h-full min-h-[400px] bg-gray-200 dark:bg-zinc-800 flex items-center justify-center">
+                            <div class="w-full h-[400px] bg-gray-200 dark:bg-zinc-800 flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-gray-400 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M8 12h.01M12 12h.01M16 12h.01M20 12h.01M4 12h.01M8 16h.01M12 16h.01" />
                                 </svg>
@@ -39,8 +39,8 @@ $formattedDate = \Carbon\Carbon::parse($event->event_date)->format('d F Y');
                         @endif
                     </div>
                     
-                    <!-- Article Info (Right) -->
-                    <div class="w-full md:w-1/3 p-6 sm:p-8 flex flex-col justify-center">
+                    <!-- Article Info (Bottom) -->
+                    <div class="w-full p-6 sm:p-8">
                         <div class="flex flex-wrap items-center gap-3 mb-4">
                             <flux:badge color="{{ $tagColors[$event->tag] ?? 'zinc' }}" class="inline-flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,15 +65,15 @@ $formattedDate = \Carbon\Carbon::parse($event->event_date)->format('d F Y');
             </div>
             
             <!-- Article Content -->
-            <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700 p-6 sm:p-8 mb-8">
-                <div class="prose prose-indigo dark:prose-invert max-w-none">
+            <div class="border-neutral-200 bg-zinc-50 dark:bg-zinc-900 rounded-xl shadow-sm dark:border-zinc-700 p-6 sm:p-8 mb-8">
+                <div class="text-justify prose prose-indigo dark:prose-invert max-w-none">
                     {!! $event->article !!}
                 </div>
                 
             </div>
             
             <!-- Share and Actions -->
-            <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700 p-6">
+            <div class="border-neutral-200 bg-zinc-50 dark:bg-zinc-900 rounded-xl shadow-sm dark:border-zinc-700 p-6">
                 <div class="flex flex-wrap justify-between items-center">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Share this event</h3>

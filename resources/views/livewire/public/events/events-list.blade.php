@@ -5,7 +5,7 @@
         <div class="absolute inset-0 z-0">
             <img src="https://lansugarden.org/content/CI_assets/PDXLeesIlluminatedLion-MAMM22.jpg?v=1692838685344"
                 alt="Events background" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-zinc-900/80"></div>
+            <div class="absolute inset-0 bg-zinc-700/50 dark:bg-black/50"></div>
         </div>
         <div class="relative z-10 flex flex-col items-center text-center py-16 px-4">
             
