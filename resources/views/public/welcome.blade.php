@@ -1,4 +1,3 @@
-<x-layouts.app :title="__('Home')">
 @php
     // Map event tags to badge colors
     $tagColors = [
@@ -15,20 +14,7 @@
     ];
 @endphp
 
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KKHSbog</title>
-    @vite('resources/css/app.css')
-    @vite('resources/js/app.js')
-</head>
-
-<!-- Main content container with all other sections -->
-
-<body class="min-h-screen bg-white dark:bg-zinc-800">
+<x-layouts.app :title="__('Home')">
     {{-- Hero Section --}}
     <div id="hero-section" class="relative h-screen w-full">
         <!-- Top background blur -->
@@ -214,13 +200,11 @@
         <!-- 2. Events Section -->
         <div class="mt-15">
             <div class="mb-4">
-                <h2 class="text-3xl md:text-4xl font-bold text-zinc-900/80 dark:text-white">Events
-                </h2>
-                <p class= "text-zinc-900/80 dark:text-gray-300 mb-4">Read the latest articles about the events happening
-                    in KKHS</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-zinc-900/80 dark:text-white">Events</h2>
+                <p class="text-zinc-900/80 dark:text-gray-300 mb-4">Read the latest articles about the events happening in KKHS</p>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach ($events as $event)
+                @forelse ($events as $event)
                     <a href="{{ route('events.show', $event->id) }}" class="block hover:no-underline group">
                         <article class="flex flex-col">
                             <!-- Square Image Container -->
@@ -250,13 +234,19 @@
                             </div>
                         </article>
                     </a>
-                @endforeach
+                @empty
+                    <div class="lg:col-span-4 sm:col-span-2 col-span-1 flex flex-col items-center justify-center p-8 rounded-lg border-2 border-dashed border-zinc-200 dark:border-zinc-700">
+                        <flux:icon name="calendar" class="w-12 h-12 text-zinc-400 dark:text-zinc-500 mb-3" />
+                        <h3 class="text-lg font-medium text-zinc-900 dark:text-white mb-1">No Events Yet</h3>
+                        <p class="text-zinc-500 dark:text-zinc-400 text-center">Stay tuned! Events will be posted here soon.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>
 
     <!-- 3. Vision and Mission Section -->
-    <div class="relative overflow-hidden py-0 mt-16 shadow-md -mx-8 lg:-mx-8">
+    <div class="relative overflow-hidden py-0 mt-16 shadow-md -mx-6 lg:-mx-8">
         <div class="absolute inset-0 z-0">
             <img src="https://images.ctfassets.net/6alb7q886wpg/4TDEnyZJC5jCIydbp7imas/dbaaf257a28536cefa8c16ce2867561d/Hero_Opener_2_5_21_image_by_Henry_Co.png"
                 alt="Vision and Mission Background" class="w-full h-full object-cover">
@@ -340,11 +330,4 @@
             <livewire:achievements.achievements-display />
         </div>
     </div>
-    </div>
-
-    @fluxScripts
-
-</body>
-
-</html>
 </x-layouts.app>
