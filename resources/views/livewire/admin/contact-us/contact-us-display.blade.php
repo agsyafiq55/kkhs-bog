@@ -12,10 +12,12 @@
             </p>
         </div>
 
-        <flux:button href="{{ route('admin.contactus.edit', ['contactUsId' => $contactUs->id]) }}"
+        <flux:button
+            @if ($contactUs) href="{{ route('admin.contactus.edit', ['contactUsId' => $contactUs->id]) }}" @endif
             class="bg-gray-600 hover:bg-gray-700 transition-colors">
             {{ __('Edit Contact Us') }}
         </flux:button>
+
     </div>
 
     <flux:separator variant="subtle" class="mb-6" />
