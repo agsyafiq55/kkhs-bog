@@ -13,13 +13,10 @@
         </div>
 
         <flux:button
-            @if ($contactUs) 
-                href="{{ route('admin.contactus.edit', ['contactUsId' => $contactUs->id]) }}" 
-            @else
-                disabled
-            @endif
-            class="bg-gray-600 hover:bg-gray-700 transition-colors">
-            {{ __('Edit Contact Us') }}
+            href="{{ $contactUs ? route('admin.contactus.edit', ['contactUsId' => $contactUs->id]) : route('admin.contactus.create') }}"
+            class="{{ $contactUs ? 'bg-gray-600 hover:bg-gray-700' : 'bg-indigo-600 hover:bg-indigo-700' }} transition-colors"
+        >
+            {{ $contactUs ? __('Edit Contact Us Info') : __('Add Contact Us Info') }}
         </flux:button>
 
     </div>
