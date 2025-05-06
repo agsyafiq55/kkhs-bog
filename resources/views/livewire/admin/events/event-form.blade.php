@@ -149,7 +149,6 @@
                         <flux:text variant="strong" class="mb-2 block text-gray-700 dark:text-gray-300">Upload Image
                         </flux:text>
                         <input type="file" id="thumbnail" wire:model="thumbnail"
-                        @csrf
                             class="block w-full text-sm text-gray-500
                                 file:mr-4 file:py-2 file:px-4
                                 file:rounded-full file:border-0
@@ -158,6 +157,7 @@
                                 hover:file:bg-indigo-100
                                 dark:text-gray-400 dark:file:bg-zinc-700 dark:file:text-zinc-100"
                             accept="image/*" />
+                            @csrf
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG, JPG, WebP - Max 5MB</p>
                         @error('thumbnail')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
