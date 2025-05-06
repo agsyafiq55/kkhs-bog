@@ -4,7 +4,6 @@ namespace App\Livewire\Admin\Events;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Event;
@@ -69,13 +68,8 @@ class EventForm extends Component
     // sync thumbnail validation
     public function updatedThumbnail()
     {
-        try {
-            $this->validateOnly('thumbnail', ['thumbnail' => 'image|max:5120']);
-            $this->debugInfo = "Thumbnail ready: " . $this->thumbnail->getClientOriginalName();
-        } catch (\Exception $e) {
-            Log::error('Thumbnail validation error: ' . $e->getMessage());
-            session()->flash('error', 'Error validating image: ' . $e->getMessage());
-        }
+        $this->validateOnly('thumbnail', ['thumbnail' => 'image|max:5120']);
+        $this->debugInfo = "Thumbnail ready: " . $this->thumbnail->getClientOriginalName();
     }
 
     // handle any field updating (including article via listener)
@@ -89,69 +83,62 @@ class EventForm extends Component
     {
         // Ensure UTF-8 encoding is preserved
         $html = mb_convert_encoding($html, 'UTF-8', mb_detect_encoding($html));
-
+        
         // Remove any BOM if present
         $html = str_replace("\xEF\xBB\xBF", '', $html);
-
+        
         // Force UTF-8 for DOMDocument operations
         $html = '<?xml encoding="UTF-8">' . $html;
-
+        
         $this->$model = $html;
         $this->validateOnly($model, $this->rules(), $this->messages());
     }
 
     public function save()
     {
+        $this->validate($this->rules(), $this->messages());
+    
         try {
-            $this->validate($this->rules(), $this->messages());
-
             if ($this->eventId) {
                 // --- UPDATE ---
                 $event = Event::findOrFail($this->eventId);
-
+    
                 // Only delete images that are not present in the new content
                 $oldImages = $this->getImagesFromContent($event->article);
                 $newImages = $this->getImagesFromContent($this->article);
                 $imagesToDelete = array_diff($oldImages, $newImages);
-
+                
                 foreach ($imagesToDelete as $imageUrl) {
                     if (strpos($imageUrl, '/storage/rte-images/') !== false) {
                         $path = str_replace('/storage/', '', parse_url($imageUrl, PHP_URL_PATH));
                         Storage::disk('public')->delete($path);
                     }
                 }
-
+    
                 // process new article (base64 → storage, swap src)
                 $cleanHtml = $this->processQuillContent($this->article);
                 $event->article = $cleanHtml;
-
+    
                 // other fields
                 $event->title = $this->title;
                 $event->description = $this->description;
                 $event->event_date = $this->event_date;
                 $event->tag = $this->tag;
                 $event->is_highlighted = $this->is_highlighted;
-
+    
                 // thumbnail replacement
-                if ($this->thumbnail && $this->thumbnail instanceof TemporaryUploadedFile) {
+                if ($this->thumbnail) {
                     if ($event->thumbnail) {
                         Storage::disk('public')->delete($event->thumbnail);
                     }
-                    try {
-                        $filename = uniqid() . '.' . $this->thumbnail->getClientOriginalExtension();
-                        $path = $this->thumbnail->storeAs('uploads/events', $filename, 'public');
-                        $event->thumbnail = 'uploads/events/' . $filename;
-                        Log::info("File stored: {$path}");
-                    } catch (\Exception $e) {
-                        Log::error("Thumbnail store error: " . $e->getMessage());
-                        session()->flash('error', 'Error storing thumbnail: ' . $e->getMessage());
-                        return;
-                    }
+                    $filename = uniqid() . '.' . $this->thumbnail->extension();
+                    $this->thumbnail->storeAs('uploads/events', $filename, 'public');
+                    $event->thumbnail = 'uploads/events/' . $filename;
                 }
-
+    
                 $event->save();
                 session()->flash('success', 'Event updated successfully!');
-
+    
             } else {
                 // --- CREATE ---
                 $event = new Event();
@@ -160,32 +147,19 @@ class EventForm extends Component
                 $event->event_date = $this->event_date;
                 $event->tag = $this->tag;
                 $event->is_highlighted = $this->is_highlighted;
-
+    
                 // process article
                 $event->article = $this->processQuillContent($this->article);
-
+    
                 // handle thumbnail
-                try {
-                    if ($this->thumbnail instanceof TemporaryUploadedFile) {
-                        $filename = uniqid() . '.' . $this->thumbnail->getClientOriginalExtension();
-                        $path = $this->thumbnail->storeAs('uploads/events', $filename, 'public');
-                        $event->thumbnail = 'uploads/events/' . $filename;
-                        Log::info("File stored: {$path}");
-                    } else {
-                        Log::error("Thumbnail is not a valid upload");
-                        session()->flash('error', 'Invalid thumbnail upload');
-                        return;
-                    }
-                } catch (\Exception $e) {
-                    Log::error("Thumbnail store error: " . $e->getMessage());
-                    session()->flash('error', 'Error storing thumbnail: ' . $e->getMessage());
-                    return;
-                }
-
+                $filename = uniqid() . '.' . $this->thumbnail->extension();
+                $this->thumbnail->storeAs('uploads/events', $filename, 'public');
+                $event->thumbnail = 'uploads/events/' . $filename;
+    
                 $event->save();
                 session()->flash('success', 'Event added successfully!');
             }
-
+    
             return redirect()->route('admin.events');
         } catch (\Exception $e) {
             Log::error('Event save error: ' . $e->getMessage());
@@ -202,30 +176,25 @@ class EventForm extends Component
 
     protected function processQuillContent(string $html): string
     {
-        try {
-            Storage::disk('public')->makeDirectory('rte-images');
+        Storage::disk('public')->makeDirectory('rte-images');
 
-            $dom = new DOMDocument('1.0', 'UTF-8');
-            libxml_use_internal_errors(true);
-            $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOENT);
-            libxml_clear_errors();
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        libxml_use_internal_errors(true);
+        $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOENT);
+        libxml_clear_errors();
 
-            foreach (iterator_to_array($dom->getElementsByTagName('img')) as $img) {
-                $src = $img->getAttribute('src');
-                if (preg_match('#^data:image/([^;]+);base64,(.+)$#', $src, $m)) {
-                    $ext = $m[1];
-                    $data = base64_decode($m[2]);
-                    $filename = 'rte-images/' . uniqid() . '.' . $ext;
-                    Storage::disk('public')->put($filename, $data);
-                    $img->setAttribute('src', asset("storage/{$filename}"));
-                }
+        foreach (iterator_to_array($dom->getElementsByTagName('img')) as $img) {
+            $src = $img->getAttribute('src');
+            if (preg_match('#^data:image/([^;]+);base64,(.+)$#', $src, $m)) {
+                $ext = $m[1];
+                $data = base64_decode($m[2]);
+                $filename = 'rte-images/' . uniqid() . '.' . $ext;
+                Storage::disk('public')->put($filename, $data);
+                $img->setAttribute('src', asset("storage/{$filename}"));
             }
-
-            return $dom->saveHTML();
-        } catch (\Exception $e) {
-            Log::error('Error processing Quill content: ' . $e->getMessage());
-            return $html; // Return original on error
         }
+
+        return $dom->saveHTML();
     }
 
     protected function getImagesFromContent(string $html): array
