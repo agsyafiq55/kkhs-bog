@@ -170,15 +170,25 @@
 
             // Apply Tailwind styles to markdown elements
             function applyTailwindStyles(container) {
+                // Fix first paragraph or line that might be incorrectly formatted as code
+                const firstChild = container.firstElementChild;
+                if (firstChild && (firstChild.tagName === 'PRE' || firstChild.tagName === 'CODE')) {
+                    const text = firstChild.textContent;
+                    const newP = document.createElement('p');
+                    newP.textContent = text;
+                    newP.className = 'mb-3 leading-relaxed';
+                    container.replaceChild(newP, firstChild);
+                }
+                
                 // Headings
                 container.querySelectorAll('h1').forEach(el => {
-                    el.className = 'text-xl font-bold text-red-500 mt-3 mb-2 pb-1 border-b border-gray-200 dark:border-zinc-700';
+                    el.className = 'text-lg font-semibold text-red-500 mb-2';
                     // Ensure clean content
                     el.innerHTML = el.textContent;
                 });
 
                 container.querySelectorAll('h2').forEach(el => {
-                    el.className = 'text-lg font-semibold mt-3 mb-2';
+                    el.className = 'text-base font-semibold mt-2 mb-1';
                     el.innerHTML = el.textContent;
                 });
 
@@ -205,11 +215,13 @@
                     el.className = 'font-bold text-zinc-900 dark:text-white');
 
                 // Code elements
-                container.querySelectorAll('pre').forEach(el =>
-                    el.className = 'bg-gray-100 dark:bg-zinc-800 p-3 rounded-md my-2 overflow-x-auto');
+                container.querySelectorAll('pre').forEach(el => {
+                    el.className = 'my-2';
+                });
 
-                container.querySelectorAll('code:not(pre code)').forEach(el =>
-                    el.className = 'bg-gray-100 dark:bg-zinc-800 px-1 rounded font-mono text-sm');
+                container.querySelectorAll('code:not(pre code)').forEach(el => {
+                    el.className = 'font-normal';
+                });
             }
 
             // Scroll to bottom of chat

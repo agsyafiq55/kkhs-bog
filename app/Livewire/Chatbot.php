@@ -348,7 +348,8 @@ class Chatbot extends Component
                            "they try asking about other topics like upcoming events or academic achievements. " .
                            "Format your response nicely using markdown, with proper headings, bullet points and emphasis where appropriate. " .
                            "Always maintain a friendly, helpful tone appropriate for a school website assistant." .
-                           "DO NOT ever mention about the database to the user";
+                           "Your outputs SHOULD NEVER include code, only texts" .
+                           "DO NOT ever mention the word DATABASE to the user, instead use the word RECORDS";
             
             // Add previous messages to maintain conversation context
             $messages = [
