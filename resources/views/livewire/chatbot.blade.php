@@ -34,7 +34,7 @@
                 <p class="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Try asking:</p>
                 <div class="space-y-2">
                     <button wire:click="$set('userInput', 'Tell me about the events happening in KKHS')" class="w-full text-left px-3 py-2 bg-white dark:bg-zinc-800 text-sm rounded-md shadow-sm border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors text-zinc-700 dark:text-zinc-300">
-                        What events are coming up?
+                        Tell me about the events happening in KKHS
                     </button>
                     <button wire:click="$set('userInput', 'Who are the members of the Board of Governors?')" class="w-full text-left px-3 py-2 bg-white dark:bg-zinc-800 text-sm rounded-md shadow-sm border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors text-zinc-700 dark:text-zinc-300">
                         Who are the members of the Board of Governors?

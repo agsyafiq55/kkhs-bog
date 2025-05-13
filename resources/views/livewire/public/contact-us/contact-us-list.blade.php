@@ -18,57 +18,107 @@
             </p>
         </div>
     </div>
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-    @if ($contactUs)
-        <div class="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <div
-                class="space-y-6 bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Address</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-300">{{ $contactUs->address }}</p>
+    <div class="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
+        @if (!$contactUs)
+        <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-zinc-700 text-center">
+            <div class="flex flex-col items-center justify-center py-12">
+                <div class="bg-gray-100 dark:bg-zinc-800 rounded-full p-6 mb-6">
+                    <flux:icon name="information-circle" class="w-12 h-12 text-gray-400" />
+                </div>
+                <flux:heading size="lg" class="mb-3">No Contact Information Available</flux:heading>
+                <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6">
+                    {{ __('No contact information has been added yet. Please click the button below to add your organization\'s contact details.') }}
+                </p>
+                <flux:button
+                    href="{{ route('admin.contactus.edit') }}"
+                    class="bg-red-500 hover:bg-red-600 transition-colors">
+                    <flux:icon name="plus" class="mr-2" />
+                    {{ __('Add Contact Information') }}
+                </flux:button>
+            </div>
+        </div>
+        @else
+        <!-- Display Contact Information -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Contact Details Card -->
+            <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-zinc-700">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-100 dark:bg-red-900/20 p-3 rounded-lg mr-4">
+                        <flux:icon name="information-circle" class="w-6 h-6 text-red-500 dark:text-red-400" />
+                    </div>
+                    <flux:heading size="lg" class="text-gray-800 dark:text-white">Basic Information</flux:heading>
                 </div>
 
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Email</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-300">
-                        <a href="mailto:{{ $contactUs->email }}"
-                            class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-                            {{ $contactUs->email }}
-                        </a>
-                    </p>
-                </div>
+                <div class="space-y-6 mt-6">
+                    <div class="flex border-b border-gray-100 dark:border-zinc-800 pb-4">
+                        <div class="w-1/3">
+                            <flux:text variant="strong" class="text-gray-600 dark:text-gray-400">Address:</flux:text>
+                        </div>
+                        <div class="w-2/3">
+                            <p class="text-gray-800 dark:text-gray-200">{{ $contactUs->address }}</p>
+                        </div>
+                    </div>
 
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Phone Numbers</h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-300">
-                        <a href="tel:{{ $contactUs->phone_no1 }}"
-                            class="block text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-                            {{ $contactUs->phone_no1 }}
-                        </a>
-                        @if ($contactUs->phone_no2)
-                            <a href="tel:{{ $contactUs->phone_no2 }}"
-                                class="block text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                    <div class="flex border-b border-gray-100 dark:border-zinc-800 pb-4">
+                        <div class="w-1/3">
+                            <flux:text variant="strong" class="text-gray-600 dark:text-gray-400">Email:</flux:text>
+                        </div>
+                        <div class="w-2/3">
+                            <a href="mailto:{{ $contactUs->email }}" class="text-red-500 hover:text-red-600 transition-colors">
+                                {{ $contactUs->email }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex border-b border-gray-100 dark:border-zinc-800 pb-4">
+                        <div class="w-1/3">
+                            <flux:text variant="strong" class="text-gray-600 dark:text-gray-400">Phone 1:</flux:text>
+                        </div>
+                        <div class="w-2/3">
+                            <a href="tel:{{ $contactUs->phone_no1 }}" class="text-gray-800 dark:text-gray-200 hover:text-red-500 transition-colors">
+                                {{ $contactUs->phone_no1 }}
+                            </a>
+                        </div>
+                    </div>
+
+                    @if($contactUs->phone_no2)
+                    <div class="flex pb-2">
+                        <div class="w-1/3">
+                            <flux:text variant="strong" class="text-gray-600 dark:text-gray-400">Phone 2:</flux:text>
+                        </div>
+                        <div class="w-2/3">
+                            <a href="tel:{{ $contactUs->phone_no2 }}" class="text-gray-800 dark:text-gray-200 hover:text-red-500 transition-colors">
                                 {{ $contactUs->phone_no2 }}
                             </a>
-                        @endif
-                    </p>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
 
-            <div
-                class="h-96 bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
+            <!-- Map Location Card -->
+            <div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700 overflow-hidden h-full">
                 @if ($contactUs->map_url)
-                    <iframe src="{{ $contactUs->map_url }}" class="w-full h-full rounded-xl" style="border:0;"
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
+                <iframe
+                    src="{{ $contactUs->map_url }}"
+                    width="100%"
+                    height="100%"
+                    class="w-full h-full min-h-[400px]"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                @else
+                <div class="flex items-center justify-center h-full min-h-[400px] bg-gray-50 dark:bg-zinc-800">
+                    <div class="text-center p-6">
+                        <flux:icon name="map-pin" class="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                        <p class="text-gray-500 dark:text-gray-400">No map location has been provided.</p>
+                    </div>
+                </div>
                 @endif
             </div>
         </div>
-    @else
-        <div class="mt-12 text-center text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-zinc-800 p-8 rounded-lg">
-            Contact information is not available at the moment.
-        </div>
-    @endif
-</div>
+        @endif
+    </div>
 </div>
