@@ -137,7 +137,9 @@
                                         </svg>
                                         Edit
                                     </flux:button>
-                                    <flux:button wire:click.stop="deleteMember({{ $member->id }})"
+                                    
+                                    <flux:button 
+                                        x-on:click="event.stopPropagation(); $flux.modal('delete-member-{{ $member->id }}').show()"
                                         class="text-sm bg-transparent hover:bg-red-50 dark:hover:bg-red-900 text-red-600 dark:text-red-400 px-4 py-2 rounded-md">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 inline-block"
                                             viewBox="0 0 20 20" fill="currentColor">
@@ -170,4 +172,35 @@
             </div>
         @endif
     </div>
+    
+    <!-- Delete confirmation modals -->
+    @foreach ($members as $member)
+        <flux:modal name="delete-member-{{ $member->id }}" class="min-w-[22rem]">
+            <div class="space-y-6">
+                <div>
+                    <flux:heading size="lg">Delete board member?</flux:heading>
+
+                    <flux:text class="mt-2">
+                        <p>You're about to delete "{{ $member->member_name }}" ({{ $member->position }}).</p>
+                        <p>This action cannot be reversed.</p>
+                    </flux:text>
+                </div>
+
+                <div class="flex gap-2">
+                    <flux:spacer />
+
+                    <flux:modal.close>
+                        <flux:button variant="ghost">Cancel</flux:button>
+                    </flux:modal.close>
+
+                    <flux:button 
+                        wire:click="deleteMember({{ $member->id }})" 
+                        x-on:click="$flux.modal('delete-member-{{ $member->id }}').close()"
+                        variant="danger">
+                        Delete member
+                    </flux:button>
+                </div>
+            </div>
+        </flux:modal>
+    @endforeach
 </div>

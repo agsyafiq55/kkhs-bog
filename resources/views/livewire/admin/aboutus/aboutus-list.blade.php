@@ -132,9 +132,9 @@
             
                 <!-- Delete Button -->
                 <div class="col-span-1 lg:col-span-2 mt-4 flex justify-end">
-                    <flux:button wire:click="deleteAboutUs({{ $aboutUsData->id }})"
-                        class="bg-red-600 hover:bg-red-700 transition-colors"
-                        onclick="return confirm('Are you sure you want to delete this About Us information?')">
+                    <flux:button 
+                        onclick="event.stopPropagation(); Flux.modal('delete-aboutus').show();"
+                        class="bg-red-600 hover:bg-red-700 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 inline-block" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                         </svg>
@@ -165,4 +165,35 @@
             </div>
         @endif
     </div>
+    
+    @if($aboutUsData)
+    <!-- Delete confirmation modal -->
+    <flux:modal name="delete-aboutus" class="min-w-[22rem]">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Delete About Us information?</flux:heading>
+
+                <flux:text class="mt-2">
+                    <p>You're about to delete the About Us information for {{ $selectedYear }}.</p>
+                    <p>This action cannot be reversed.</p>
+                </flux:text>
+            </div>
+
+            <div class="flex gap-2">
+                <flux:spacer />
+
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancel</flux:button>
+                </flux:modal.close>
+
+                <flux:button 
+                    wire:click="deleteAboutUs({{ $aboutUsData->id }})" 
+                    onclick="Flux.modal('delete-aboutus').close();"
+                    variant="danger">
+                    Delete information
+                </flux:button>
+            </div>
+        </div>
+    </flux:modal>
+    @endif
 </div>

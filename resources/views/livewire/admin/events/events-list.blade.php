@@ -111,7 +111,9 @@
                             </svg>
                             Edit
                         </flux:button>
-                        <flux:button wire:click.stop="delete({{ $event->id }})"
+                        
+                        <flux:button 
+                            x-on:click="event.stopPropagation(); $flux.modal('delete-event-{{ $event->id }}').show()"
                             class="text-sm bg-transparent hover:bg-red-50 dark:hover:bg-red-900 text-red-600 dark:text-red-400">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 inline-block"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -144,4 +146,35 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating your first event.</p>
         </div>
     @endif
+
+    <!-- Delete confirmation modals -->
+    @foreach ($events as $event)
+        <flux:modal name="delete-event-{{ $event->id }}" class="min-w-[22rem]">
+            <div class="space-y-6">
+                <div>
+                    <flux:heading size="lg">Delete event?</flux:heading>
+
+                    <flux:text class="mt-2">
+                        <p>You're about to delete "{{ $event->title }}".</p>
+                        <p>This action cannot be reversed.</p>
+                    </flux:text>
+                </div>
+
+                <div class="flex gap-2">
+                    <flux:spacer />
+
+                    <flux:modal.close>
+                        <flux:button variant="ghost">Cancel</flux:button>
+                    </flux:modal.close>
+
+                    <flux:button 
+                        wire:click="delete({{ $event->id }})" 
+                        x-on:click="$flux.modal('delete-event-{{ $event->id }}').close()"
+                        variant="danger">
+                        Delete event
+                    </flux:button>
+                </div>
+            </div>
+        </flux:modal>
+    @endforeach
 </div>
