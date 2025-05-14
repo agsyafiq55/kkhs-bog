@@ -11,7 +11,7 @@
             
             <!-- Main heading -->
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2">Events</h1>
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-red-800 mb-6">大事</h2>
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-red-800 mb-6">活动</h2>
             
             <!-- Subtitle -->
             <p class="text-gray-300 max-w-2xl mb-2">

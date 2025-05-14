@@ -9,8 +9,8 @@
         </div>
         <div class="relative z-10 flex flex-col items-center text-center py-16 px-4">
             <!-- Main heading -->
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2">Get in touch.</h1>
-            <h2 class="text-3xl md:text-5xl lg:text-6xl font-bold text-red-800 mb-6">公告</h2>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2">Get in touch</h1>
+            <h2 class="text-3xl md:text-5xl lg:text-6xl font-bold text-red-800 mb-6">取得联系</h2>
 
             <!-- Subtitle -->
             <p class="text-gray-300 max-w-2xl mb-2">

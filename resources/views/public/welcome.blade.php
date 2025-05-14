@@ -311,15 +311,10 @@
             </div>
             <div class="flex flex-col md:flex-row relative z-10 p-4 sm:p-8">
                 <div class="w-full md:w-2/3 flex flex-col justify-center space-y-2 md:space-y-4">
-                    <h1 class="text-white text-4xl sm:text-5xl md:text-7xl font-bold">Our Achievements</h1>
-                    <h2 class="text-white text-3xl sm:text-4xl md:text-5xl font-semibold">我们的成就</h2>
-                </div>
-                <div class="w-full md:w-1/3 mt-4 md:mt-0">
+                    <h1 class="text-white text-4xl sm:text-3xl md:text-5xl font-bold">Our Achievements</h1>
                     <p class="text-gray-300 text-sm md:text-base text-justify">
                         Explore our academic and co-curricular achievements that showcase the excellence and
                         dedication of our students and staff.
-                        <br class="hidden sm:block"><br class="hidden sm:block">
-                        探索我们的学术和课外成就，展示我们学生和教职员工的卓越表现和奉献精神。
                     </p>
                 </div>
             </div>
