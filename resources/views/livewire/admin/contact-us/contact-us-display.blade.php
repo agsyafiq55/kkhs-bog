@@ -53,7 +53,7 @@
                     </div>
                     <flux:heading size="lg" class="text-gray-800 dark:text-white">Basic Information</flux:heading>
                 </div>
-                
+
                 <div class="space-y-6 mt-6">
                     <div class="flex border-b border-gray-100 dark:border-zinc-800 pb-4">
                         <div class="w-1/3">
@@ -73,7 +73,7 @@
                                 {{ $contactUs->email }}
                             </a>
                         </div>
-                    </div>
+                </div>
 
                     <div class="flex border-b border-gray-100 dark:border-zinc-800 pb-4">
                         <div class="w-1/3">
@@ -84,7 +84,7 @@
                                 {{ $contactUs->phone_no1 }}
                             </a>
                         </div>
-                    </div>
+                </div>
 
                     @if($contactUs->phone_no2)
                     <div class="flex pb-2">
@@ -114,15 +114,15 @@
                         loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
-                @else
+        @else
                     <div class="flex items-center justify-center h-full min-h-[400px] bg-gray-50 dark:bg-zinc-800">
                         <div class="text-center p-6">
                             <flux:icon name="map-pin" class="w-8 h-8 text-gray-400 mx-auto mb-2" />
                             <p class="text-gray-500 dark:text-gray-400">No map location has been provided.</p>
                         </div>
                     </div>
-                @endif
-            </div>
+        @endif
+    </div>
         </div>
     @endif
 </div>
