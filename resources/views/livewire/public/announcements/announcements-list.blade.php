@@ -50,40 +50,35 @@
         <div wire:loading.remove wire:target="search" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             @forelse($announcements as $announcement)
                 <a href="{{ route('announcements.show', $announcement->id) }}"
-                    class="block hover:no-underline h-full group">
-                    <article
-                        class="relative overflow-hidden rounded-lg shadow-md border border-neutral-200 dark:border-zinc-800 transition-all duration-300 hover:shadow-xl hover:scale-102 h-96 bg-zinc-50 dark:bg-zinc-900">
-                        <!-- Background Image -->
-                        <div class="h-48 overflow-hidden">
+                    class="block hover:no-underline group">
+                    <article class="flex flex-col relative">
+                        <!-- Square Image Container -->
+                        <div class="aspect-square w-full overflow-hidden rounded-lg">
                             <img src="{{ $announcement->image ? asset('storage/' . $announcement->image) : asset('images/placeholder.jpg') }}"
                                 alt="{{ $announcement->title }}"
-                                class="w-full h-full object-cover transition duration-700 ease-out group-hover:scale-105">
+                                class="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-105">
                         </div>
 
-                        <!-- Content Section -->
-                        <div class="p-5">
-                            <h3
-                                class="line-clamp-2 text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                        <!-- Content Section - No Background -->
+                        <div>
+                            <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white line-clamp-2 group-hover:text-red-500 transition-colors">
                                 {{ $announcement->title }}
                             </h3>
 
-                            <p class="line-clamp-2 text-sm/relaxed text-gray-600 dark:text-gray-300">
-                                {{ \Illuminate\Support\Str::limit($announcement->content, 150) }}
-                            </p>
-
-                            <div class="text-sm text-gray-500 dark:text-gray-400 mt-3 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                {{ $announcement->published_at->format('F d, Y') }}
+                            <div class="mt-1 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    {{ $announcement->published_at->format('M d, Y') }}
+                                </div>
 
                                 @if ($announcement->publish_end)
-                                    <span class="mx-1">•</span>
-                                    <span title="Available until {{ $announcement->publish_end->format('F d, Y') }}">
+                                    <div title="Available until {{ $announcement->publish_end->format('F d, Y') }}">
                                         {{ $announcement->publish_end->diffForHumans() }}
-                                    </span>
+                                    </div>
                                 @endif
                             </div>
                         </div>
