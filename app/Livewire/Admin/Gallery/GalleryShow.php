@@ -14,6 +14,14 @@ class GalleryShow extends Component
         $this->gallery = Gallery::findOrFail($galleryId);
     }
 
+    public function confirmDelete($id)
+    {
+        $gallery = Gallery::findOrFail($id);
+        $gallery->delete();
+        
+        return redirect()->route('admin.gallery')->with('success', 'Gallery image deleted successfully.');
+    }
+
     public function render()
     {
         return view('livewire.admin.gallery.gallery-show', [
