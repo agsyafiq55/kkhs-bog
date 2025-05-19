@@ -1,9 +1,14 @@
 <div class="py-6">
-    <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <flux:heading size="xl" level="1" class="text-gray-800 dark:text-white">{{ __('Gallery Management') }}</flux:heading>
-            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Manage and organize your school gallery images</p>
+    <!-- Page Header Section -->
+    <div class="mb-6">
+        <div class="flex items-center mb-2">
+            <flux:icon name="photo" class="mr-3 h-6 w-6 text-gray-800 dark:text-white"/>
+            <flux:heading size="xl" level="1" class="text-gray-800 dark:text-white">
+                {{ __('Manage Gallery') }}</flux:heading>
         </div>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            {{ __('Manage and organize school gallery images.') }}
+        </p>
     </div>
 
     <!-- Controls Section with Background -->
@@ -11,11 +16,6 @@
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
             <!-- Search and Filter Controls -->
             <div class="w-full sm:w-2/3 flex flex-col gap-2">
-                <!-- Filter Label -->
-                <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {{ __('Filter Gallery') }}
-                </div>
-
                 <!-- Filter Controls -->
                 <div class="flex flex-col sm:flex-row gap-3">
                     {{-- Search Bar --}}
@@ -66,7 +66,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($galleries as $gallery)
-            <div class="group relative border-neutral-200 bg-zinc-50 dark:bg-zinc-900 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 dark:border-zinc-700"
+            <div class="group relative border-neutral-200 bg-zinc-50 dark:bg-zinc-900 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border dark:border-zinc-700"
                 wire:click="redirectToShow({{ $gallery->id }})">
                 
                 <!-- Gallery Image -->

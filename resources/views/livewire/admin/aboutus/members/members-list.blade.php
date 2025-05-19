@@ -2,7 +2,7 @@
     <!-- Page Header Section -->
     <div class="mb-6">
         <div class="flex items-center mb-2">
-            <flux:icon name="users" class="mr-3 h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+            <flux:icon name="user" class="mr-3 h-6 w-6 text-gray-800 dark:text-white"/>
             <flux:heading size="xl" level="1" class="text-gray-800 dark:text-white">
                 {{ __('Board Members Management') }}</flux:heading>
         </div>

@@ -1,39 +1,55 @@
 <div class="py-6">
-    <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+    <!-- Page Header Section -->
+    <div class="mb-6">
+        <div class="flex items-center mb-2">
+            <flux:icon name="megaphone" class="mr-3 h-6 w-6 text-gray-800 dark:text-white"/>
             <flux:heading size="xl" level="1" class="text-gray-800 dark:text-white">
-                {{ __('Announcements Management') }}
-            </flux:heading>
-            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Manage school announcements and notices</p>
+                {{ __('Manage Announcements') }}</flux:heading>
         </div>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            {{ __('Manage and organize school announcements.') }}
+        </p>
+    </div>
 
-        {{-- Search Bar --}}
-        <div class="w-full sm:w-1/3">
-            @livewire('search-bar', [
-            'model' => 'Announcement',
-            'searchFields' => ['title', 'content'],
-            'wireKey' => 'announcements-search'
-            ])
+    <!-- Controls Section with Background -->
+    <div class="mb-6 p-4 bg-gray-50 dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-700">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <!-- Search and Filter Controls -->
+            <div class="w-full sm:w-2/3 flex flex-col gap-2">
+                <!-- Filter Controls -->
+                <div class="flex flex-col sm:flex-row gap-3">
+                    {{-- Search Bar --}}
+                    {{-- Search Bar --}}
+                    <div class="w-full sm:w-1/3">
+                        @livewire('search-bar', [
+                        'model' => 'Announcement',
+                        'searchFields' => ['title', 'content'],
+                        'wireKey' => 'announcements-search'
+                        ])
+                    </div>
+
+                    {{-- Status Filter Dropdown --}}
+                    <div class="w-full sm:w-auto">
+                        <flux:select wire:model.live="statusFilter">
+                            <option value="all">All Announcements</option>
+                            <option value="active">Active Announcements</option>
+                            <option value="inactive">Inactive Announcements</option>
+                        </flux:select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Button -->
+            <flux:button href="{{ route('admin.announcements.create') }}" class="transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 inline-block" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                        clip-rule="evenodd" />
+                </svg>
+                {{ __('Add New Announcement') }}
+            </flux:button>
         </div>
-
-        {{-- Status Filter Dropdown --}}
-        <div class="w-full sm:w-auto">
-            <flux:select wire:model.live="statusFilter">
-                <option value="all">All Announcements</option>
-                <option value="active">Active Announcements</option>
-                <option value="inactive">Inactive Announcements</option>
-            </flux:select>
-        </div>
-
-        <flux:button href="{{ route('admin.announcements.create') }}" class="transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 inline-block" viewBox="0 0 20 20"
-                fill="currentColor">
-                <path fill-rule="evenodd"
-                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                    clip-rule="evenodd" />
-            </svg>
-            {{ __('Add New Announcement') }}
-        </flux:button>
     </div>
 
     <flux:separator variant="subtle" class="mb-6" />
