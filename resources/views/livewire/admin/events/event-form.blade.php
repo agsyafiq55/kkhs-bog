@@ -223,23 +223,6 @@
                         </flux:button>
                     </div>
                 </div>
-
-                <!-- Form Debug Info (for development) -->
-                @if (config('app.debug'))
-                    <div
-                        class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-zinc-700">
-                        <flux:heading size="lg" class="mb-4">Debug Info</flux:heading>
-                        <div class="text-xs font-mono overflow-x-auto">
-                            <p>Title: {{ $title }}</p>
-                            <p>Description: {{ $description }}</p>
-                            <p>Event Date: {{ $event_date }}</p>
-                            <p>Tag: {{ $tag }}</p>
-                            <p>Has Article: {{ !empty($article) ? 'Yes' : 'No' }}</p>
-                            <p>Has Thumbnail: {{ $thumbnail ? 'Yes' : 'No' }}</p>
-                            <p>Is Highlighted: {{ $is_highlighted ? 'Yes' : 'No' }}</p>
-                        </div>
-                    </div>
-                @endif
             </div>
         </div>
     </form>
