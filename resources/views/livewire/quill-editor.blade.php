@@ -24,11 +24,8 @@
       theme: 'snow',
       modules: {
         toolbar: [
-          [{ 'font': [] }],
-          [{ header: [1, 2, false] }],
           ['bold','italic','underline'],
-          [{ 'align': [] }],
-          ['image','blockquote']
+          ['image']
         ]
       }
     });

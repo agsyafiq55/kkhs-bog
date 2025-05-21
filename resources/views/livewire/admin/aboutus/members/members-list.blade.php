@@ -36,7 +36,7 @@
                         <flux:select wire:model.live="selectedYear">
                             <option value="">{{ __('All Years') }}</option>
                             @foreach($availableYears as $year)
-                                <option value="{{ $year }}">{{ $year }}</option>
+                                <option value="{{ $year }}">{{ $year }}{{ $year == $latestYear ? ' (Current)' : '' }}</option>
                             @endforeach
                         </flux:select>
                     </div>

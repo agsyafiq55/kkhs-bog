@@ -14,12 +14,20 @@ class MemberList extends Component
     public $search = ''; // Added search property
     public $selectedYear = ''; // Added year filter property
     public $availableYears = []; // To store all available years
+    public $latestYear = null; // Store the latest year
 
     protected $listeners = ['searchUpdated' => 'updateSearch']; // Listen for SearchBar updates
 
     public function mount()
     {
         $this->loadAvailableYears();
+        
+        // Set the selected year to the latest year by default
+        if (!empty($this->availableYears)) {
+            $this->selectedYear = $this->availableYears[0]; // Since years are ordered desc, first one is latest
+            $this->latestYear = $this->selectedYear;
+        }
+        
         $this->loadMembers();
     }
     
