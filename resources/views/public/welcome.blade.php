@@ -72,129 +72,99 @@
     <div class="max-w-6xl align mx-auto">
         <div id="carousel" class="pt-5">
             @php
-                // First get announcements with publish_start and publish_end dates
-                $featuredAnnouncements = App\Models\Announcement::whereNotNull('publish_start')
-                    ->whereNotNull('publish_end')
-                    ->orderBy('published_at', 'desc')
+                // Get all announcements, ordered by published date
+                $announcements = App\Models\Announcement::orderBy('published_at', 'desc')
+                    ->take(6)
                     ->get();
-
-                // If we have less than 6 featured announcements, get regular ones to fill the remaining slots
-                $regularAnnouncements = collect();
-                if ($featuredAnnouncements->count() < 6) {
-                    $regularAnnouncements = App\Models\Announcement::whereNull('publish_start')
-                        ->orWhereNull('publish_end')
-                        ->orderBy('published_at', 'desc')
-                        ->take(6 - $featuredAnnouncements->count())
-                        ->get();
-                }
-
-                // Combine the collections and take maximum 6
-                $latestAnnouncements = $featuredAnnouncements->concat($regularAnnouncements)->take(6);
             @endphp
-            <div x-data="{
-                // Sets the time between each slides in milliseconds
-                autoplayIntervalTime: 4500,
-                slides: [
-                    @foreach ($latestAnnouncements as $announcement)
-                    {
-                        imgSrc: '{{ $announcement->image ? asset('storage/' . $announcement->image) : asset('images/placeholder.jpg') }}',
-                        imgAlt: '{{ $announcement->title }}',
-                        title: '{{ $announcement->title }}',
-                        description: '{{ Str::limit(strip_tags($announcement->content), 150) }}',
-                        link: '{{ route('announcements.show', $announcement->id) }}',
-                        isFeatured: {{ $announcement->publish_start && $announcement->publish_end ? 'true' : 'false' }}
-                    }, @endforeach
-                ],
-                currentSlideIndex: 1,
-                isPaused: false,
-                autoplayInterval: null,
-                previous() {
-                    if (this.currentSlideIndex > 1) {
-                        this.currentSlideIndex = this.currentSlideIndex - 1
-                    } else {
-                        // If it's the first slide, go to the last slide           
-                        this.currentSlideIndex = this.slides.length
-                    }
-                },
-                next() {
-                    if (this.currentSlideIndex < this.slides.length) {
-                        this.currentSlideIndex = this.currentSlideIndex + 1
-                    } else {
-                        // If it's the last slide, go to the first slide    
-                        this.currentSlideIndex = 1
-                    }
-                },
-                autoplay() {
-                    this.autoplayInterval = setInterval(() => {
-                        if (!this.isPaused) {
-                            this.next()
-                        }
-                    }, this.autoplayIntervalTime)
-                },
-                // Updates interval time   
-                setAutoplayInterval(newIntervalTime) {
-                    clearInterval(this.autoplayInterval)
-                    this.autoplayIntervalTime = newIntervalTime
-                    this.autoplay()
-                },
-            }" x-init="autoplay"
-                class="relative w-full overflow-hidden rounded-xl shadow-lg">
-
+            
+            @if($announcements->count() > 0)
+            <div x-data="{ currentSlide: 1, totalSlides: {{ $announcements->count() }} }" 
+                 x-init="setInterval(() => { if (currentSlide < totalSlides) { currentSlide++; } else { currentSlide = 1; } }, 4500)"
+                 class="relative w-full overflow-hidden rounded-xl shadow-lg">
+                
                 <!-- Slider -->
                 <div class="relative min-h-[500px] w-full bg-zinc-900">
-                    <template x-for="(slide, index) in slides">
-                        <div x-cloak x-show="currentSlideIndex == index + 1" class="absolute inset-0"
-                            x-transition.opacity.duration.1000ms>
+                    @foreach ($announcements as $index => $announcement)
+                    <div x-show="currentSlide === {{ $index + 1 }}" 
+                         x-transition:enter="transition ease-out duration-300"
+                         x-transition:enter-start="opacity-0"
+                         x-transition:enter-end="opacity-100"
+                         x-transition:leave="transition ease-in duration-300"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0"
+                         class="absolute inset-0">
+                        <!-- Image with overlay gradient -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-zinc-700/50 via-zinc-700/30 to-transparent dark:from-zinc-900/90 dark:via-zinc-900/60 dark:to-transparent z-10"></div>
+                        <img class="absolute w-full h-full inset-0 object-cover" 
+                             src="{{ $announcement->image ? asset('storage/' . $announcement->image) : asset('images/placeholder.jpg') }}" 
+                             alt="{{ $announcement->title }}" />
 
-                            <!-- Image with overlay gradient -->
-                            <div
-                                class="absolute inset-0 bg-gradient-to-r from-zinc-700/50 via-zinc-700/30 to-transparent dark:from-zinc-900/90 dark:via-zinc-900/60 dark:to-transparent z-10">
-                            </div>
-                            <img class="absolute w-full h-full inset-0 object-cover" x-bind:src="slide.imgSrc"
-                                x-bind:alt="slide.imgAlt" />
-
-                            <!-- Content positioned on left side -->
-                            <div class="relative z-20 flex h-full">
-                                <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                                    <div class="mb-2 flex gap-2">
-                                        <span
-                                            class="bg-red-500 text-white text-xs font-medium px-2.5 py-1 rounded">ANNOUNCEMENT</span>
-                                        <template x-if="slide.isFeatured">
-                                            <span
-                                                class="bg-amber-500 text-white text-xs font-medium px-2.5 py-1 rounded">LATEST</span>
-                                        </template>
-                                    </div>
-                                    <h3 class="text-balance text-3xl md:text-6xl font-bold text-white mb-4"
-                                        x-text="slide.title"></h3>
-                                    <p class="text-pretty text-sm md:text-base text-gray-200 mb-6"
-                                        x-text="slide.description"></p>
-                                    <a x-bind:href="slide.link"
-                                        class="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-100 text-gray-800 text-sm font-medium rounded-md transition-colors w-fit">
-                                        Read More
-                                        <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
-                                    </a>
+                        <!-- Content positioned on left side -->
+                        <div class="relative z-20 flex h-full">
+                            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                                <div class="mb-2 flex gap-2">
+                                    <span class="bg-red-500 text-white text-xs font-medium px-2.5 py-1 rounded">ANNOUNCEMENT</span>
+                                    @if($announcement->publish_start && $announcement->publish_end)
+                                    <span class="bg-amber-500 text-white text-xs font-medium px-2.5 py-1 rounded">LATEST</span>
+                                    @endif
                                 </div>
+                                <h3 class="text-balance text-3xl md:text-6xl font-bold text-white mb-4">{{ $announcement->title }}</h3>
+                                <p class="text-pretty text-sm md:text-base text-gray-200 mb-6">{{ Str::limit(strip_tags($announcement->content), 150) }}</p>
+                                <a href="{{ route('announcements.show', $announcement->id) }}"
+                                    class="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-100 text-gray-800 text-sm font-medium rounded-md transition-colors w-fit">
+                                    Read More
+                                    <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
                             </div>
                         </div>
-                    </template>
+                    </div>
+                    @endforeach
+                </div>
+
+                <!-- Navigation arrows -->
+                <div class="absolute inset-y-0 left-0 flex items-center">
+                    <button @click="currentSlide = currentSlide > 1 ? currentSlide - 1 : totalSlides" 
+                            class="bg-black/30 hover:bg-black/50 text-white p-2 rounded-r-lg focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="absolute inset-y-0 right-0 flex items-center">
+                    <button @click="currentSlide = currentSlide < totalSlides ? currentSlide + 1 : 1" 
+                            class="bg-black/30 hover:bg-black/50 text-white p-2 rounded-l-lg focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
                 </div>
 
                 <!-- Slider indicators at bottom -->
-                <div class="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2" role="group"
-                    aria-label="slides">
-                    <template x-for="(slide, index) in slides">
-                        <button class="w-2 h-2 rounded-full transition"
-                            x-on:click="(currentSlideIndex = index + 1), setAutoplayInterval(autoplayIntervalTime)"
-                            x-bind:class="[currentSlideIndex === index + 1 ? 'bg-white' : 'bg-white/50']"
-                            x-bind:aria-label="'slide ' + (index + 1)"></button>
-                    </template>
+                <div class="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2" role="group" aria-label="slides">
+                    @foreach ($announcements as $index => $announcement)
+                    <button @click="currentSlide = {{ $index + 1 }}" 
+                            class="w-2 h-2 rounded-full transition"
+                            :class="{'bg-white': currentSlide === {{ $index + 1 }}, 'bg-white/50': currentSlide !== {{ $index + 1 }}}"
+                            aria-label="slide {{ $index + 1 }}"></button>
+                    @endforeach
                 </div>
             </div>
+            @else
+            <div class="relative w-full overflow-hidden rounded-xl shadow-lg bg-zinc-900 min-h-[300px] flex items-center justify-center">
+                <div class="text-center p-8">
+                    <flux:icon name="megaphone" class="w-16 h-16 text-zinc-400 dark:text-zinc-500 mx-auto mb-4" />
+                    <h3 class="text-xl font-medium text-white mb-2">No Announcements Available</h3>
+                    <p class="text-zinc-400 dark:text-zinc-300">Stay tuned for upcoming announcements and updates.</p>
+                </div>
+            </div>
+            @endif
         </div>
 
         <!-- 2. Events Section -->
