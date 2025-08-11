@@ -1,7 +1,7 @@
 <div>
     <div
         class="relative overflow-hidden rounded-2xl shadow-lg border border-gray-200 dark:border-zinc-800 max-w-6xl mx-auto mb-12">
-        <img src="https://mrwallpaper.com/images/hd/chinese-lantern-photography-azuq3mbutdxhp3z7.jpg"
+        <img src="{{ asset('images/stock-photos/about-us.jpg') }}"
             alt="Chinese lantern" class="absolute inset-0 w-full h-full object-cover z-0">
         <div class="absolute inset-0   bg-zinc-700/50 dark:bg-black/50 z-10"></div>
 

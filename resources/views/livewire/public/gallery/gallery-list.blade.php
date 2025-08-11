@@ -3,7 +3,7 @@
     <div class="bg-black relative overflow-hidden p-0 m-0 shadow-md -mx-6 -mt-6 lg:-mx-8 lg:-mt-8">
         <!-- Background image with overlay -->
         <div class="absolute inset-0 z-0">
-            <img src="https://images.pexels.com/photos/5474047/pexels-photo-5474047.jpeg" alt="Chinese landscape"
+            <img src="{{ asset('images/stock-photos/gallery.jpeg') }}" alt="Chinese landscape"
                 alt="Events background" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-zinc-700/50 dark:bg-black/50"></div>
         </div>

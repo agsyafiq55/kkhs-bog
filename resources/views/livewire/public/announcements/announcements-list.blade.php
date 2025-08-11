@@ -3,7 +3,7 @@
     <div class="bg-black relative overflow-hidden p-0 m-0 shadow-md -mx-6 -mt-6 lg:-mx-8 lg:-mt-8">
         <!-- Background image with overlay -->
         <div class="absolute inset-0 z-0">
-            <img src="https://images.pexels.com/photos/518543/pexels-photo-518543.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Newspaper"
+            <img src="{{ asset('images/stock-photos/announcements.jpeg') }}" alt="Newspaper"
                 alt="Events background" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-zinc-700/50 dark:bg-black/50"></div>
         </div>

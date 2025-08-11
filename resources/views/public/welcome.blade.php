@@ -218,7 +218,7 @@
     <!-- 3. Vision and Mission Section -->
     <div class="relative overflow-hidden py-0 mt-16 shadow-md -mx-6 lg:-mx-8">
         <div class="absolute inset-0 z-0">
-            <img src="https://images.ctfassets.net/6alb7q886wpg/4TDEnyZJC5jCIydbp7imas/dbaaf257a28536cefa8c16ce2867561d/Hero_Opener_2_5_21_image_by_Henry_Co.png"
+            <img src="{{ asset('images/stock-photos/welcome.png') }}"
                 alt="Vision and Mission Background" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-zinc-700/50 dark:bg-black/50"></div>
         </div>
