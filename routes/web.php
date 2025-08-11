@@ -5,19 +5,20 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AnnouncementController;
+use Illuminate\Support\Facades\Auth;
 
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
 
-// To creat sym link in production server
-Route::get('/linkstorage', function () {
-    Artisan::call('storage:link');
-});
+// // To creat sym link in production server
+// Route::get('/linkstorage', function () {
+//     Artisan::call('storage:link');
+// });
 
 // Landing Page
 // If user is authenticated, redirect to dashboard, otherwise show welcome page
 Route::get('/', function() {
-    if (auth()->check()) {
+    if (Auth::check()) {
         return redirect()->route('dashboard');
     }
     return app(GuestController::class)->index();

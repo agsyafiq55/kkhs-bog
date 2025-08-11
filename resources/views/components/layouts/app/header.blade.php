@@ -34,16 +34,10 @@
         <flux:spacer />
 
         <flux:navbar class="mr-1.5 space-x-0.5 py-0!">
+            <flux:separator vertical />
             {{-- Darkmode Toggle --}}
             <flux:tooltip content="Toggle Dark Mode">
                 <flux:button x-data x-on:click="$flux.dark = ! $flux.dark" icon="moon" variant="subtle" aria-label="Toggle dark mode"/>
-            </flux:tooltip>
-            <flux:separator vertical />
-            {{-- Language Picker --}}
-            <flux:tooltip content="Choose Language">
-                <div class="gtranslate_wrapper"></div>
-                <script>window.gtranslateSettings = {"default_language":"en","detect_browser_language":true,"languages":["en","zh-CN"],"wrapper_selector":".gtranslate_wrapper"}</script>
-                <script src="https://cdn.gtranslate.net/widgets/latest/flags.js" defer></script>
             </flux:tooltip>
         </flux:navbar>
     </flux:header>

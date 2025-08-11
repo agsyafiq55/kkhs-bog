@@ -30,7 +30,7 @@
                                 class="hover:underline ">YouTube</a>
                         </li>
                         <li>
-                            <a href="https://www.facebook.com/KotaKinabaluHighSchool/?locale=ms_MY"
+                            <a href="https://www.facebook.com/profile.php?id=61578390877248"
                                 class="hover:underline">Facebook</a>
                         </li>
                     </ul>
