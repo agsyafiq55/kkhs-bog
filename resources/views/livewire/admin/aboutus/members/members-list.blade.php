@@ -91,7 +91,7 @@
         @if (count($members) > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($members as $member)
-                    <div
+                    <div wire:key="member-card-{{ $member->id }}"
                         class="group relative bg-white dark:bg-zinc-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-zinc-700 hover:border-indigo-200 dark:hover:border-indigo-800">
                         <div class="p-6">
                             <!-- Position badge -->
@@ -138,17 +138,18 @@
                                         Edit
                                     </flux:button>
                                     
-                                    <flux:button 
-                                        x-on:click="event.stopPropagation(); $flux.modal('delete-member-{{ $member->id }}').show()"
-                                        class="text-sm bg-transparent hover:bg-red-50 dark:hover:bg-red-900 text-red-600 dark:text-red-400 px-4 py-2 rounded-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 inline-block"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Delete
-                                    </flux:button>
+                                    <flux:modal.trigger name="delete-member-{{ $member->id }}">
+                                        <flux:button 
+                                            class="text-sm bg-transparent hover:bg-red-50 dark:hover:bg-red-900 text-red-600 dark:text-red-400 px-4 py-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 inline-block"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            Delete
+                                        </flux:button>
+                                    </flux:modal.trigger>
                                 </div>
                             </div>
                         </div>
@@ -174,8 +175,8 @@
     </div>
     
     <!-- Delete confirmation modals -->
-    @foreach ($members as $member)
-        <flux:modal name="delete-member-{{ $member->id }}" class="min-w-[22rem]">
+        @foreach ($members as $member)
+            <flux:modal name="delete-member-{{ $member->id }}" class="min-w-[22rem]" wire:key="member-modal-{{ $member->id }}">
             <div class="space-y-6">
                 <div>
                     <flux:heading size="lg">Delete board member?</flux:heading>
