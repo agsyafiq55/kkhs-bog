@@ -26,7 +26,7 @@ class EventForm extends Component
 
     // listen for the Quill editor updates
     protected $listeners = [
-        'quillChanged' => 'updateQuill'
+        'quillChanged' => 'onQuillChanged'
     ];
 
     protected function rules()
@@ -79,17 +79,24 @@ class EventForm extends Component
     }
 
     // listener for Quill editor
-    public function updateQuill($model, $html)
+    public function onQuillChanged(...$params)
     {
-        // Ensure UTF-8 encoding is preserved
-        $html = mb_convert_encoding($html, 'UTF-8', mb_detect_encoding($html));
-        
-        // Remove any BOM if present
-        $html = str_replace("\xEF\xBB\xBF", '', $html);
-        
-        // Force UTF-8 for DOMDocument operations
-        $html = '<?xml encoding="UTF-8">' . $html;
-        
+        // Normalize payload: supports (model, html) or ([model =>, html =>])
+        $model = null;
+        $html = '';
+        if (count($params) >= 2) {
+            $model = $params[0];
+            $html = $params[1] ?? '';
+        } elseif (count($params) === 1 && is_array($params[0])) {
+            $model = $params[0]['model'] ?? null;
+            $html = $params[0]['html'] ?? '';
+        } else {
+            // Unknown payload shape; ignore safely
+            return;
+        }
+
+        if (!$model) return;
+
         $this->$model = $html;
         $this->validateOnly($model, $this->rules(), $this->messages());
     }
@@ -180,7 +187,8 @@ class EventForm extends Component
 
         $dom = new DOMDocument('1.0', 'UTF-8');
         libxml_use_internal_errors(true);
-        $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOENT);
+        // Ensure UTF-8 handling for non-ASCII (e.g., Chinese) characters
+        $dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
 
         foreach (iterator_to_array($dom->getElementsByTagName('img')) as $img) {
@@ -194,7 +202,10 @@ class EventForm extends Component
             }
         }
 
-        return $dom->saveHTML();
+        $result = $dom->saveHTML();
+        // Strip XML encoding preamble if present
+        $result = preg_replace('/^<\?xml.*?\?>/u', '', $result);
+        return $result;
     }
 
     protected function getImagesFromContent(string $html): array

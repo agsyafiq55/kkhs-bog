@@ -1,7 +1,8 @@
 <div wire:ignore>
-  <div id="editor_{{ $model }}" class="quill-editor">
+  <div id="editor_{{ $model }}" class="quill-editor" data-model="{{ $model }}">
     {!! $content !!}
   </div>
+  <div id="editor_status_{{ $model }}" class="mt-2 text-xs text-gray-500"></div>
 </div>
 
 @once
@@ -16,70 +17,155 @@
 @push('scripts')
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const modelName = @json($model);
-    const editorId  = 'editor_' + modelName;
-    const initial   = @json($content);
+    const editorId = 'editor_{{ $model }}';
+    const statusId = 'editor_status_{{ $model }}';
+    const el = document.getElementById(editorId);
+    const statusEl = document.getElementById(statusId);
+    if (!el) return;
 
     const quill = new Quill('#' + editorId, {
       theme: 'snow',
+      placeholder: 'Write your article here... You can paste images or click the image button to upload.',
       modules: {
         toolbar: [
-          ['bold','italic','underline'],
-          ['image']
-        ]
+          [{ header: [1, 2, 3, false] }],
+          ['bold','italic','underline','strike'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          ['link','image'],
+          [{ 'align': [] }],
+          ['blockquote','code-block'],
+          ['clean']
+        ],
+        history: { delay: 500, maxStack: 100, userOnly: true }
       }
     });
 
-    // set initial HTML
-    quill.root.innerHTML = initial;
+    // Initial HTML is already in the element; Quill picks it up automatically.
 
-    // image handler remains the same...
-    // Modified text-change handler with explicit UTF-8 handling
-    quill.on('text-change', () => {
+    function debounce(fn, wait) {
+      let t = null;
+      return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    const updateStatus = (text) => {
+      if (!statusEl) return;
+      statusEl.textContent = text;
+    };
+
+    const sendContent = debounce(() => {
       const html = quill.root.innerHTML;
-      
-      // Create a temporary element to handle the content
-      const temp = document.createElement('div');
-      temp.innerHTML = html;
-      
-      // Get the text content with preserved HTML
-      const content = temp.innerHTML;
-      
-      // Send with explicit UTF-8 encoding
-      const encoder = new TextEncoder();
-      const decoder = new TextDecoder('utf-8');
-      const encoded = decoder.decode(encoder.encode(content));
-      
-      @this.updateContent(encoded);
-    });
-    quill.getModule('toolbar').addHandler('image', () => {
+      if (window.Livewire) window.Livewire.dispatch('quillChanged', { model: el.dataset.model, html });
+      const plain = quill.getText() || '';
+      updateStatus(`${plain.trim().length} characters`);
+    }, 600);
+
+    quill.on('text-change', sendContent);
+
+    // Custom image handler: upload to server, then insert URL
+    const toolbar = quill.getModule('toolbar');
+    toolbar.addHandler('image', () => {
       const input = document.createElement('input');
-      input.setAttribute('type','file');
-      input.setAttribute('accept','image/*');
-      input.click();
-      input.onchange = () => {
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-          const base64 = reader.result;
-          const range = quill.getSelection();
-          quill.insertEmbed(range.index, 'image', base64);
-        };
-        reader.readAsDataURL(file);
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = async () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Image too large. Max 5MB.');
+          return;
+        }
+        updateStatus('Uploading image...');
+        try {
+          const form = new FormData();
+          form.append('image', file);
+          const tokenEl = document.querySelector('meta[name="csrf-token"]');
+          const token = tokenEl ? tokenEl.getAttribute('content') : '';
+          const res = await fetch('/rte/upload', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': token },
+            body: form
+          });
+          if (!res.ok) throw new Error('Upload failed');
+          const data = await res.json();
+          const range = quill.getSelection(true) || { index: quill.getLength() };
+          quill.insertEmbed(range.index, 'image', data.url, 'user');
+          quill.setSelection(range.index + 1, 0);
+          updateStatus('Image uploaded');
+          sendContent();
+        } catch (e) {
+          console.error(e);
+          alert('Failed to upload image.');
+          updateStatus('');
+        }
       };
+      input.click();
     });
 
-    // single text-change handler with better encoding
-    quill.on('text-change', () => {
-      const html = quill.root.innerHTML;
-      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-      const reader = new FileReader();
-      reader.onload = () => {
-        const text = reader.result;
-        @this.updateContent(text);
-      };
-      reader.readAsText(blob, 'utf-8');
-    });
+    // Helper: convert base64 to File
+    function dataUrlToFile(dataUrl, filename) {
+      const arr = dataUrl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    }
+
+    // Process pasted/dragged base64 images by uploading and swapping to URL
+    const uploadedCache = new Map(); // base64 => url
+    let processing = false;
+
+    async function processEmbeddedBase64Images() {
+      if (processing) return;
+      processing = true;
+      try {
+        const images = Array.from(quill.root.querySelectorAll('img'))
+          .filter(img => img.src && img.src.startsWith('data:image/'));
+        for (const img of images) {
+          const src = img.src;
+          if (uploadedCache.has(src)) {
+            img.src = uploadedCache.get(src);
+            continue;
+          }
+          updateStatus('Uploading pasted image...');
+          const file = dataUrlToFile(src, 'pasted.png');
+          if (file.size > 5 * 1024 * 1024) {
+            alert('A pasted image exceeds 5MB and will be skipped.');
+            continue;
+          }
+          try {
+            const form = new FormData();
+            form.append('image', file);
+            const tokenEl = document.querySelector('meta[name="csrf-token"]');
+            const token = tokenEl ? tokenEl.getAttribute('content') : '';
+            const res = await fetch('/rte/upload', { method: 'POST', headers: { 'X-CSRF-TOKEN': token }, body: form });
+            if (!res.ok) throw new Error('Upload failed');
+            const data = await res.json();
+            img.src = data.url;
+            uploadedCache.set(src, data.url);
+            sendContent();
+          } catch (err) {
+            console.error(err);
+            // leave base64 as last resort, but it may hurt performance
+          } finally {
+            updateStatus('');
+          }
+        }
+      } finally {
+        processing = false;
+      }
+    }
+
+    const scanForBase64 = debounce(processEmbeddedBase64Images, 800);
+    quill.root.addEventListener('paste', () => setTimeout(scanForBase64, 50));
+    quill.root.addEventListener('drop', () => setTimeout(scanForBase64, 50));
+    quill.on('text-change', scanForBase64);
   });
 </script>
 @endpush

@@ -17,6 +17,7 @@ use App\Livewire\Admin\AboutUs\Timeline\TimelineEdit;
 use App\Livewire\Admin\Announcements\AnnouncementsList;
 use App\Livewire\Admin\Announcements\AnnouncementForm;
 use App\Livewire\Admin\Announcements\AnnouncementShow;
+use App\Http\Controllers\RteUploadController;
 
 Route::view('/admin/dashboard', '/admin/dashboard')
     ->middleware(['auth', 'verified'])
@@ -33,6 +34,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
+
+// Rich Text Editor uploads
+Route::middleware(['auth'])->post('/rte/upload', [RteUploadController::class, 'store'])->name('rte.upload');
 
 // 1. Events Manager 
 Route::middleware(['auth'])->group(function () {

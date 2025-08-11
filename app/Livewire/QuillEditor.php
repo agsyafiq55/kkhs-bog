@@ -17,8 +17,7 @@ class QuillEditor extends Component
 
     public function updateContent($html)
     {
-        $html = base64_decode(base64_encode($html));
-        $this->dispatch('quillChanged', model: $this->model, html: $html);
+        $this->dispatch('quillChanged', html: $html, model: $this->model);
     }
 
     public function render()
