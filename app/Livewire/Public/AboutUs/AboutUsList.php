@@ -10,6 +10,7 @@ class AboutUsList extends Component
 {
     public $aboutUs;
     public $members;
+    public $chairman;
     public $selectedYear = null;
     public $availableYears = [];
 
@@ -46,10 +47,12 @@ class AboutUsList extends Component
             
             // Get members for the selected year
             $this->members = Member::where('year', $this->selectedYear)->get();
+            $this->chairman = $this->members->firstWhere('position', 'Chairman');
         } else {
             // If no year is selected, get the latest data
             $this->aboutUs = AboutUs::latest()->first();
             $this->members = Member::all();
+            $this->chairman = $this->members->firstWhere('position', 'Chairman');
         }
     }
 

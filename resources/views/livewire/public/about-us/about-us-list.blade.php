@@ -67,10 +67,10 @@
                                 class="w-full h-full object-cover">
                         </div>
                         <div class="text-center">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Mr.
-                                {{ $aboutUs->chairman_name ?? 'Chairman' }}
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                {{ optional($chairman)->member_name ?? '—' }}
                             </h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">KKHS BOG Chairman</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ $selectedYear }} Chairman</p>
                         </div>
                     </div>
                     <div class="md:w-2/3">
@@ -153,7 +153,7 @@
                                 <!-- Member Content -->
                                 <div class="text-center">
                                     <h3
-                                        class="text-lg font-semibold text-gray-800 dark:text-white mb-2 line-clamp-1">
+                                        class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
                                         {{ $member->member_name }}
                                     </h3>
 
