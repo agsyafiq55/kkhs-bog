@@ -34,11 +34,92 @@ kkhs-bog/
 |-- vite.config.js      Vite build configuration
 ```
 
-## Run Locally
+## Run With Docker
 
 ### Prerequisites
 
-- Laragon
+- Docker Engine or Docker Desktop
+- Docker Compose
+- OpenRouter account for the chatbot feature
+
+### Setup Steps
+
+1. Copy the environment file:
+
+```bash
+cp .env.example .env
+```
+
+2. Update `.env` for Docker:
+
+```env
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=kkhs-bog
+DB_USERNAME=kkhs_bog_user
+DB_PASSWORD=kkhs_bog_password
+MYSQL_ROOT_PASSWORD=root
+```
+
+3. Add your OpenRouter values:
+
+```env
+OPENROUTER_API_KEY=your-openrouter-api-key
+OPENROUTER_MODEL=your-preferred-model
+```
+
+4. Build the PHP image and install dependencies:
+
+```bash
+docker compose build
+docker compose run --rm app composer install
+docker compose run --rm vite npm install
+```
+
+5. Start the development stack:
+
+```bash
+docker compose up
+```
+
+The `app` service now runs the required Laravel startup commands automatically:
+
+- `php artisan key:generate --force` when `APP_KEY` is missing
+- `php artisan storage:link`
+- `php artisan migrate --force`
+
+The `vite` service now runs these frontend commands automatically:
+
+- `npm run build`
+- `npm run dev -- --host 0.0.0.0 --port 5173`
+
+6. Open the application:
+
+- Laravel app: `http://localhost:8000`
+- Vite dev server: `http://localhost:5173`
+
+7. Stop the stack when you are done:
+
+```bash
+docker compose down
+```
+
+The Compose stack starts these services:
+
+- `app` for `php artisan serve`
+- `queue` for `php artisan queue:listen --tries=1`
+- `vite` for `npm run dev`
+- `mysql` for the local database
+
+## Run Locally Without Docker
+Optionally, if you are not familiar with Docker, you may use Laragon or XAMPP instead.
+
+### Prerequisites
+
+- Laragon/XAMPP
 - PHP
 - Composer
 - Node.js and npm
@@ -46,8 +127,8 @@ kkhs-bog/
 
 ### Setup Steps
 
-1. Install Laragon.
-2. Start the required Laragon services, especially MySQL.
+1. Install Laragon/XAMPP.
+2. Start the required Laragon/XAMPP services, especially MySQL.
 3. Use phpMyAdmin if you want a GUI to create or manage the local database.
 4. Install dependencies:
 
